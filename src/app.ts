@@ -6,6 +6,7 @@ import path from "path";
 import { routerAdmin } from "./routes/admin.route";
 import { verificateConnection } from "./database/connectionDB";
 import { routerAuth } from "./routes/auth.route";
+import {routerComment} from "./routes/comment.route";
 import { verificarRegistro } from "./services/dataDefault.service";
 
 verificateConnection();
@@ -26,6 +27,7 @@ app.use(
 
 app.use("/api/admin", routerAdmin);
 app.use("/api/auth", routerAuth);
+app.use("/api/comment", routerComment);
 
 app.listen(process.env.PORT || 3001, () => {
   console.log(`🚀 Server is running on port ${process.env.PORT || 3001}`);

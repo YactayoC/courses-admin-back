@@ -27,7 +27,15 @@ const iniciarSesion = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Contraseña incorrecta" });
     }
 
-    return res.json({ message: "Usuario autenticado correctamente" });
+    return res.json({
+      message: "Usuario autenticado correctamente",
+      user: {
+        id: user.id,
+        nombre: user.nombre,
+        email: user.email,
+        rol_id: user.rol_id,
+      },
+    });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }
