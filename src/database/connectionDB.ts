@@ -2,9 +2,9 @@ import { createPool } from "mysql2/promise";
 
 export const pool = createPool({
   host: "localhost",
-  user: "root",
-  password: "sebas123",
-  database: "leog",
+  user: process.env.USER_DB,
+  password: process.env.PASSWORD_DB,
+  database: process.env.DATABASE_DB,
 });
 
 export const verificateConnection = async () => {

@@ -1,4 +1,15 @@
 import { Router } from "express";
+import multer from "multer";
+
+import storageSaveF from "../utils/saveFile";
+import { RouterPathAdmin } from "../utils/routerPath";
+import {
+  agregarCategoria,
+  eliminarCategoria,
+  listarCategorias,
+  editarCategoria,
+  listarCategoriaPorId,
+} from "../services/categorie.service";
 import {
   agregarCurso,
   listarCursos,
@@ -6,32 +17,27 @@ import {
   actualizarCurso,
   listarCursoPorId,
 } from "../services/course.service";
-import {
-  agregarCategoria,
-  eliminarCategoria,
-  listarCategorias,
-  editarCategoria,
-  listarCategoriaPorId
-} from "../services/categorie.service";
-import multer from "multer";
-import storageSaveF from "../utils/saveFile";
 
 const router = Router();
-
 const upload = multer({ storage: storageSaveF });
 
 // Cursos
-router.get("/cursos", [], listarCursos);
-router.post("/cursos", [], upload.single("file"), agregarCurso);
-router.put("/cursos/:id", [], upload.single("file"), actualizarCurso);
-router.delete("/cursos/:id", [], eliminarCurso);
-router.get("/cursos/:id", [], listarCursoPorId);
+router.get(RouterPathAdmin.CURSOS, [], listarCursos);
+router.post(RouterPathAdmin.CURSOS, [], upload.single("file"), agregarCurso);
+router.put(
+  RouterPathAdmin.CURSOS_ID,
+  [],
+  upload.single("file"),
+  actualizarCurso
+);
+router.delete(RouterPathAdmin.CURSOS_ID, [], eliminarCurso);
+router.get(RouterPathAdmin.CURSOS_ID, [], listarCursoPorId);
 
 // Categorias
-router.get("/categorias", [], listarCategorias);
-router.post("/categorias", [], agregarCategoria);
-router.delete("/categorias/:id", [], eliminarCategoria);
-router.put("/categorias/:id", [], editarCategoria);
-router.get("/categorias/:id", [], listarCategoriaPorId);
+router.get(RouterPathAdmin.CATEGORIAS, [], listarCategorias);
+router.post(RouterPathAdmin.CATEGORIAS, [], agregarCategoria);
+router.delete(RouterPathAdmin.CATEGORIAS_ID, [], eliminarCategoria);
+router.put(RouterPathAdmin.CATEGORIAS_ID, [], editarCategoria);
+router.get(RouterPathAdmin.CATEGORIAS_ID, [], listarCategoriaPorId);
 
 export { router as routerAdmin };
