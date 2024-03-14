@@ -11,7 +11,8 @@ const iniciarSesion = async (req: Request, res: Response) => {
   }
 
   try {
-    const query = "SELECT * FROM usuarios WHERE email = ?";
+    const query =
+      "SELECT user.*, r.rol_name FROM usuarios user LEFT JOIN rol r ON user.rol_id = r.rol_id WHERE email = ?";
 
     const [response] = await pool.query<RowDataPacket[]>(query, [email]);
 
@@ -34,6 +35,7 @@ const iniciarSesion = async (req: Request, res: Response) => {
         nombre: user.nombre,
         email: user.email,
         rol_id: user.rol_id,
+        rol_name: user.rol_name,
       },
     });
   } catch (error) {
@@ -48,9 +50,23 @@ const registrarUsuario = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "Invalid body" });
   }
 
-  try {
-    const query = "SELECT * FROM usuarios WHERE email = ?";
+  if (email === "admin@admin.com") {
+    return res.status(400).json({ message: "Correo reservado" });
+  }
 
+  try {
+    const queryCheckEmail = "SELECT * FROM usuarios WHERE email = ?";
+    const [existingUsers] = await pool.query<RowDataPacket[]>(queryCheckEmail, [
+      email,
+    ]);
+
+    if (existingUsers.length > 0) {
+      return res
+        .status(400)
+        .json({ message: "Correo electrónico ya está registrado" });
+    }
+
+    const query = "SELECT * FROM usuarios WHERE email = ?";
     const [response] = await pool.query<RowDataPacket[]>(query, [email]);
 
     if (response.length > 0) {

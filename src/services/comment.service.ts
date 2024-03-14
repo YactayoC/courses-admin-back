@@ -37,6 +37,7 @@ const insertarComentario = async (req: Request, res: Response) => {
   }
 };
 
+//NO UTILIZADO
 const eliminarComentario = async (req: Request, res: Response) => {
   const { id } = req.params;
   if (!id) {

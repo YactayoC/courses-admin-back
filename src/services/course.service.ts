@@ -50,7 +50,6 @@ const agregarCurso = async (req: Request, res: Response) => {
   }
 };
 
-// FALLTA PROBAR
 const actualizarCurso = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { nombre, descripcion, video_iframe, categoria_id } = req.body;
