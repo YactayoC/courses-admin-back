@@ -1,442 +1,919 @@
---- DATABASE TABLAS AND RELATIONS
-create table categorias
-(
-    id          int auto_increment
-        primary key,
-    nombre      varchar(100) null,
-    descripcion text         null
-);
+-- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
+--
+-- Host: localhost    Database: leog
+-- ------------------------------------------------------
+-- Server version	8.0.35
 
-create table configuracion
-(
-    id    int auto_increment
-        primary key,
-    clave varchar(100) null,
-    valor varchar(255) null
-);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-create table contactos
-(
-    id      int auto_increment
-        primary key,
-    nombre  varchar(100)                        null,
-    email   varchar(100)                        null,
-    mensaje text                                null,
-    fecha   timestamp default CURRENT_TIMESTAMP null
-);
+--
+-- Table structure for table `archivos_adjuntos`
+--
 
-create table cursos
-(
-    id           int auto_increment
-        primary key,
-    nombre       varchar(100) null,
-    descripcion  text         null,
-    imagen_url   varchar(255) null,
-    video_iframe text         null,
-    categoria_id int          null,
-    constraint cursos_ibfk_1
-        foreign key (categoria_id) references categorias (id)
-);
+DROP TABLE IF EXISTS `archivos_adjuntos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `archivos_adjuntos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(255) DEFAULT NULL,
+  `ruta` varchar(255) DEFAULT NULL,
+  `tipo_archivo` varchar(100) DEFAULT NULL,
+  `usuario_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  CONSTRAINT `archivos_adjuntos_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create index categoria_id
-    on cursos (categoria_id);
+--
+-- Dumping data for table `archivos_adjuntos`
+--
 
-create table etiquetas
-(
-    id     int auto_increment
-        primary key,
-    nombre varchar(100) null
-);
+LOCK TABLES `archivos_adjuntos` WRITE;
+/*!40000 ALTER TABLE `archivos_adjuntos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `archivos_adjuntos` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create table curso_etiqueta
-(
-    curso_id    int not null,
-    etiqueta_id int not null,
-    primary key (curso_id, etiqueta_id),
-    constraint curso_etiqueta_ibfk_1
-        foreign key (curso_id) references cursos (id),
-    constraint curso_etiqueta_ibfk_2
-        foreign key (etiqueta_id) references etiquetas (id)
-);
+--
+-- Table structure for table `calificaciones`
+--
 
-create index etiqueta_id
-    on curso_etiqueta (etiqueta_id);
+DROP TABLE IF EXISTS `calificaciones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `calificaciones` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int DEFAULT NULL,
+  `curso_id` int DEFAULT NULL,
+  `calificacion` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `curso_id` (`curso_id`),
+  CONSTRAINT `calificaciones_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `calificaciones_ibfk_2` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create table idiomas
-(
-    id     int auto_increment
-        primary key,
-    codigo varchar(10) null,
-    constraint codigo
-        unique (codigo)
-);
+--
+-- Dumping data for table `calificaciones`
+--
 
-create table menu
-(
-    id     int auto_increment
-        primary key,
-    opcion varchar(100) null,
-    url    varchar(255) null,
-    orden  int          null
-);
+LOCK TABLES `calificaciones` WRITE;
+/*!40000 ALTER TABLE `calificaciones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `calificaciones` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create table paginas
-(
-    id        int auto_increment
-        primary key,
-    titulo    varchar(100) null,
-    contenido text         null
-);
+--
+-- Table structure for table `categorias`
+--
 
-create table contenido_pagina
-(
-    id             int auto_increment
-        primary key,
-    pagina_id      int                               null,
-    tipo_contenido enum ('texto', 'imagen', 'video') null,
-    contenido      text                              null,
-    constraint contenido_pagina_ibfk_1
-        foreign key (pagina_id) references paginas (id)
-);
+DROP TABLE IF EXISTS `categorias`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `categorias` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) DEFAULT NULL,
+  `descripcion` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create index pagina_id
-    on contenido_pagina (pagina_id);
+--
+-- Dumping data for table `categorias`
+--
 
-create table estadisticas
-(
-    id               int auto_increment
-        primary key,
-    pagina_id        int  null,
-    cantidad_visitas int  null,
-    fecha            date null,
-    constraint estadisticas_ibfk_1
-        foreign key (pagina_id) references paginas (id)
-);
+LOCK TABLES `categorias` WRITE;
+/*!40000 ALTER TABLE `categorias` DISABLE KEYS */;
+/*!40000 ALTER TABLE `categorias` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create index pagina_id
-    on estadisticas (pagina_id);
+--
+-- Table structure for table `comentarios`
+--
 
-create table permisos
-(
-    id            int auto_increment
-        primary key,
-    rol           enum ('administrador', 'visitante', 'cliente') null,
-    funcionalidad varchar(100)                                   null
-);
+DROP TABLE IF EXISTS `comentarios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `comentarios` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int DEFAULT NULL,
+  `curso_id` int DEFAULT NULL,
+  `comentario` text,
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `curso_id` (`curso_id`),
+  CONSTRAINT `comentarios_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `comentarios_ibfk_2` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create table rol
-(
-    rol_id   int auto_increment
-        primary key,
-    rol_name varchar(255) not null
-);
+--
+-- Dumping data for table `comentarios`
+--
 
-create table traducciones
-(
-    id         int auto_increment
-        primary key,
-    idioma_id  int          null,
-    etiqueta   varchar(100) null,
-    traduccion text         null,
-    constraint traducciones_ibfk_1
-        foreign key (idioma_id) references idiomas (id)
-);
+LOCK TABLES `comentarios` WRITE;
+/*!40000 ALTER TABLE `comentarios` DISABLE KEYS */;
+/*!40000 ALTER TABLE `comentarios` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create index idioma_id
-    on traducciones (idioma_id);
+--
+-- Table structure for table `configuracion`
+--
 
-create table usuarios
-(
-    id         int auto_increment
-        primary key,
-    nombre     varchar(100) null,
-    email      varchar(100) null,
-    contrasena varchar(100) null,
-    rol_id     int          null,
-    constraint email
-        unique (email),
-    constraint fk_rol_id
-        foreign key (rol_id) references rol (rol_id),
-    constraint fk_rol
-        foreign key (rol_id) references rol (rol_id)
-);
+DROP TABLE IF EXISTS `configuracion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `configuracion` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `clave` varchar(100) DEFAULT NULL,
+  `valor` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create table archivos_adjuntos
-(
-    id           int auto_increment
-        primary key,
-    nombre       varchar(255) null,
-    ruta         varchar(255) null,
-    tipo_archivo varchar(100) null,
-    usuario_id   int          null,
-    constraint archivos_adjuntos_ibfk_1
-        foreign key (usuario_id) references usuarios (id)
-);
+--
+-- Dumping data for table `configuracion`
+--
 
-create index usuario_id
-    on archivos_adjuntos (usuario_id);
+LOCK TABLES `configuracion` WRITE;
+/*!40000 ALTER TABLE `configuracion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `configuracion` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create table calificaciones
-(
-    id           int auto_increment
-        primary key,
-    usuario_id   int null,
-    curso_id     int null,
-    calificacion int null,
-    constraint calificaciones_ibfk_1
-        foreign key (usuario_id) references usuarios (id),
-    constraint calificaciones_ibfk_2
-        foreign key (curso_id) references cursos (id)
-);
+--
+-- Table structure for table `contactos`
+--
 
-create index curso_id
-    on calificaciones (curso_id);
+DROP TABLE IF EXISTS `contactos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `contactos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `mensaje` text,
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create index usuario_id
-    on calificaciones (usuario_id);
+--
+-- Dumping data for table `contactos`
+--
 
-create table comentarios
-(
-    id         int auto_increment
-        primary key,
-    usuario_id int                                 null,
-    curso_id   int                                 null,
-    comentario text                                null,
-    fecha      timestamp default CURRENT_TIMESTAMP null,
-    constraint comentarios_ibfk_1
-        foreign key (usuario_id) references usuarios (id),
-    constraint comentarios_ibfk_2
-        foreign key (curso_id) references cursos (id)
-);
+LOCK TABLES `contactos` WRITE;
+/*!40000 ALTER TABLE `contactos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `contactos` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create index curso_id
-    on comentarios (curso_id);
+--
+-- Table structure for table `contenido_pagina`
+--
 
-create index usuario_id
-    on comentarios (usuario_id);
+DROP TABLE IF EXISTS `contenido_pagina`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `contenido_pagina` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `pagina_id` int DEFAULT NULL,
+  `tipo_contenido` enum('texto','imagen','video') DEFAULT NULL,
+  `contenido` text,
+  PRIMARY KEY (`id`),
+  KEY `pagina_id` (`pagina_id`),
+  CONSTRAINT `contenido_pagina_ibfk_1` FOREIGN KEY (`pagina_id`) REFERENCES `paginas` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create table favoritos
-(
-    id         int auto_increment
-        primary key,
-    usuario_id int null,
-    curso_id   int null,
-    constraint favoritos_ibfk_1
-        foreign key (usuario_id) references usuarios (id),
-    constraint favoritos_ibfk_2
-        foreign key (curso_id) references cursos (id)
-);
+--
+-- Dumping data for table `contenido_pagina`
+--
 
-create index curso_id
-    on favoritos (curso_id);
+LOCK TABLES `contenido_pagina` WRITE;
+/*!40000 ALTER TABLE `contenido_pagina` DISABLE KEYS */;
+/*!40000 ALTER TABLE `contenido_pagina` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create index usuario_id
-    on favoritos (usuario_id);
+--
+-- Table structure for table `curso_etiqueta`
+--
 
-create table historial_navegacion
-(
-    id         int auto_increment
-        primary key,
-    usuario_id int                                 null,
-    pagina_id  int                                 null,
-    fecha      timestamp default CURRENT_TIMESTAMP null,
-    constraint historial_navegacion_ibfk_1
-        foreign key (usuario_id) references usuarios (id),
-    constraint historial_navegacion_ibfk_2
-        foreign key (pagina_id) references paginas (id)
-);
+DROP TABLE IF EXISTS `curso_etiqueta`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `curso_etiqueta` (
+  `curso_id` int NOT NULL,
+  `etiqueta_id` int NOT NULL,
+  PRIMARY KEY (`curso_id`,`etiqueta_id`),
+  KEY `etiqueta_id` (`etiqueta_id`),
+  CONSTRAINT `curso_etiqueta_ibfk_1` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`),
+  CONSTRAINT `curso_etiqueta_ibfk_2` FOREIGN KEY (`etiqueta_id`) REFERENCES `etiquetas` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create index pagina_id
-    on historial_navegacion (pagina_id);
+--
+-- Dumping data for table `curso_etiqueta`
+--
 
-create index usuario_id
-    on historial_navegacion (usuario_id);
+LOCK TABLES `curso_etiqueta` WRITE;
+/*!40000 ALTER TABLE `curso_etiqueta` DISABLE KEYS */;
+/*!40000 ALTER TABLE `curso_etiqueta` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create table integraciones
-(
-    id         int auto_increment
-        primary key,
-    servicio   varchar(100) null,
-    api_key    varchar(255) null,
-    usuario_id int          null,
-    constraint integraciones_ibfk_1
-        foreign key (usuario_id) references usuarios (id)
-);
+--
+-- Table structure for table `cursos`
+--
 
-create index usuario_id
-    on integraciones (usuario_id);
+DROP TABLE IF EXISTS `cursos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cursos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) DEFAULT NULL,
+  `descripcion` text,
+  `imagen_url` varchar(255) DEFAULT NULL,
+  `video_iframe` text,
+  `categoria_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `categoria_id` (`categoria_id`),
+  CONSTRAINT `cursos_ibfk_1` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create table notificaciones
-(
-    id         int auto_increment
-        primary key,
-    usuario_id int                                  null,
-    mensaje    text                                 null,
-    leido      tinyint(1) default 0                 null,
-    fecha      timestamp  default CURRENT_TIMESTAMP null,
-    constraint notificaciones_ibfk_1
-        foreign key (usuario_id) references usuarios (id)
-);
+--
+-- Dumping data for table `cursos`
+--
 
-create index usuario_id
-    on notificaciones (usuario_id);
+LOCK TABLES `cursos` WRITE;
+/*!40000 ALTER TABLE `cursos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cursos` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create table reportes
-(
-    id           int auto_increment
-        primary key,
-    usuario_id   int                                 null,
-    tipo_reporte varchar(100)                        null,
-    descripcion  text                                null,
-    fecha        timestamp default CURRENT_TIMESTAMP null,
-    constraint reportes_ibfk_1
-        foreign key (usuario_id) references usuarios (id)
-);
+--
+-- Table structure for table `estadisticas`
+--
 
-create index usuario_id
-    on reportes (usuario_id);
+DROP TABLE IF EXISTS `estadisticas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `estadisticas` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `pagina_id` int DEFAULT NULL,
+  `cantidad_visitas` int DEFAULT NULL,
+  `fecha` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `pagina_id` (`pagina_id`),
+  CONSTRAINT `estadisticas_ibfk_1` FOREIGN KEY (`pagina_id`) REFERENCES `paginas` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create table reportes_comentario
-(
-    id            int auto_increment
-        primary key,
-    usuario_id    int                                 null,
-    comentario_id int                                 null,
-    motivo        varchar(255)                        null,
-    fecha         timestamp default CURRENT_TIMESTAMP null,
-    constraint reportes_comentario_ibfk_1
-        foreign key (usuario_id) references usuarios (id),
-    constraint reportes_comentario_ibfk_2
-        foreign key (comentario_id) references comentarios (id)
-);
+--
+-- Dumping data for table `estadisticas`
+--
 
-create index comentario_id
-    on reportes_comentario (comentario_id);
+LOCK TABLES `estadisticas` WRITE;
+/*!40000 ALTER TABLE `estadisticas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `estadisticas` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create index usuario_id
-    on reportes_comentario (usuario_id);
+--
+-- Table structure for table `etiquetas`
+--
 
-create table respuestas_comentario
-(
-    id            int auto_increment
-        primary key,
-    usuario_id    int                                 null,
-    comentario_id int                                 null,
-    respuesta     text                                null,
-    fecha         timestamp default CURRENT_TIMESTAMP null,
-    constraint respuestas_comentario_ibfk_1
-        foreign key (usuario_id) references usuarios (id),
-    constraint respuestas_comentario_ibfk_2
-        foreign key (comentario_id) references comentarios (id)
-);
+DROP TABLE IF EXISTS `etiquetas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `etiquetas` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create index comentario_id
-    on respuestas_comentario (comentario_id);
+--
+-- Dumping data for table `etiquetas`
+--
 
-create index usuario_id
-    on respuestas_comentario (usuario_id);
+LOCK TABLES `etiquetas` WRITE;
+/*!40000 ALTER TABLE `etiquetas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `etiquetas` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create table sesiones
-(
-    id               int auto_increment
-        primary key,
-    usuario_id       int          null,
-    token            varchar(100) null,
-    fecha_expiracion datetime     null,
-    constraint sesiones_ibfk_1
-        foreign key (usuario_id) references usuarios (id)
-);
+--
+-- Table structure for table `favoritos`
+--
 
-create index usuario_id
-    on sesiones (usuario_id);
+DROP TABLE IF EXISTS `favoritos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `favoritos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int DEFAULT NULL,
+  `curso_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `curso_id` (`curso_id`),
+  CONSTRAINT `favoritos_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `favoritos_ibfk_2` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create table suscripciones
-(
-    id           int auto_increment
-        primary key,
-    usuario_id   int          null,
-    plan         varchar(100) null,
-    fecha_inicio timestamp    null,
-    fecha_fin    timestamp    null,
-    constraint suscripciones_ibfk_1
-        foreign key (usuario_id) references usuarios (id)
-);
+--
+-- Dumping data for table `favoritos`
+--
 
-create index usuario_id
-    on suscripciones (usuario_id);
+LOCK TABLES `favoritos` WRITE;
+/*!40000 ALTER TABLE `favoritos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `favoritos` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create table transacciones
-(
-    id         int auto_increment
-        primary key,
-    usuario_id int                                 null,
-    curso_id   int                                 null,
-    monto      decimal(10, 2)                      null,
-    fecha      timestamp default CURRENT_TIMESTAMP null,
-    constraint transacciones_ibfk_1
-        foreign key (usuario_id) references usuarios (id),
-    constraint transacciones_ibfk_2
-        foreign key (curso_id) references cursos (id)
-);
+--
+-- Table structure for table `historial_navegacion`
+--
 
-create index curso_id
-    on transacciones (curso_id);
+DROP TABLE IF EXISTS `historial_navegacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `historial_navegacion` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int DEFAULT NULL,
+  `pagina_id` int DEFAULT NULL,
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `pagina_id` (`pagina_id`),
+  CONSTRAINT `historial_navegacion_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `historial_navegacion_ibfk_2` FOREIGN KEY (`pagina_id`) REFERENCES `paginas` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create index usuario_id
-    on transacciones (usuario_id);
+--
+-- Dumping data for table `historial_navegacion`
+--
 
-create table valoraciones_comentario
-(
-    id            int auto_increment
-        primary key,
-    usuario_id    int                                 null,
-    comentario_id int                                 null,
-    valoracion    enum ('positiva', 'negativa')       null,
-    fecha         timestamp default CURRENT_TIMESTAMP null,
-    constraint valoraciones_comentario_ibfk_1
-        foreign key (usuario_id) references usuarios (id),
-    constraint valoraciones_comentario_ibfk_2
-        foreign key (comentario_id) references comentarios (id)
-);
+LOCK TABLES `historial_navegacion` WRITE;
+/*!40000 ALTER TABLE `historial_navegacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `historial_navegacion` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create index comentario_id
-    on valoraciones_comentario (comentario_id);
+--
+-- Table structure for table `idiomas`
+--
 
-create index usuario_id
-    on valoraciones_comentario (usuario_id);
+DROP TABLE IF EXISTS `idiomas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `idiomas` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `codigo` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `codigo` (`codigo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create table visualizaciones_curso
-(
-    id         int auto_increment
-        primary key,
-    usuario_id int                                 null,
-    curso_id   int                                 null,
-    fecha      timestamp default CURRENT_TIMESTAMP null,
-    constraint visualizaciones_curso_ibfk_1
-        foreign key (usuario_id) references usuarios (id),
-    constraint visualizaciones_curso_ibfk_2
-        foreign key (curso_id) references cursos (id)
-);
+--
+-- Dumping data for table `idiomas`
+--
 
-create index curso_id
-    on visualizaciones_curso (curso_id);
+LOCK TABLES `idiomas` WRITE;
+/*!40000 ALTER TABLE `idiomas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `idiomas` ENABLE KEYS */;
+UNLOCK TABLES;
 
-create index usuario_id
-    on visualizaciones_curso (usuario_id);
+--
+-- Table structure for table `integraciones`
+--
 
---- STORE PROCEDURES 
+DROP TABLE IF EXISTS `integraciones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `integraciones` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `servicio` varchar(100) DEFAULT NULL,
+  `api_key` varchar(255) DEFAULT NULL,
+  `usuario_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  CONSTRAINT `integraciones_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-create procedure agregar_categoria(IN p_nombre varchar(255), IN p_descripcion text)
+--
+-- Dumping data for table `integraciones`
+--
+
+LOCK TABLES `integraciones` WRITE;
+/*!40000 ALTER TABLE `integraciones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `integraciones` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `menu`
+--
+
+DROP TABLE IF EXISTS `menu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `menu` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `opcion` varchar(100) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `orden` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `menu`
+--
+
+LOCK TABLES `menu` WRITE;
+/*!40000 ALTER TABLE `menu` DISABLE KEYS */;
+/*!40000 ALTER TABLE `menu` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `notificaciones`
+--
+
+DROP TABLE IF EXISTS `notificaciones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notificaciones` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int DEFAULT NULL,
+  `mensaje` text,
+  `leido` tinyint(1) DEFAULT '0',
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  CONSTRAINT `notificaciones_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notificaciones`
+--
+
+LOCK TABLES `notificaciones` WRITE;
+/*!40000 ALTER TABLE `notificaciones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notificaciones` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `paginas`
+--
+
+DROP TABLE IF EXISTS `paginas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `paginas` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `titulo` varchar(100) DEFAULT NULL,
+  `contenido` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `paginas`
+--
+
+LOCK TABLES `paginas` WRITE;
+/*!40000 ALTER TABLE `paginas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `paginas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `permisos`
+--
+
+DROP TABLE IF EXISTS `permisos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `permisos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `rol` enum('administrador','visitante','cliente') DEFAULT NULL,
+  `funcionalidad` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permisos`
+--
+
+LOCK TABLES `permisos` WRITE;
+/*!40000 ALTER TABLE `permisos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permisos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `reportes`
+--
+
+DROP TABLE IF EXISTS `reportes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `reportes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int DEFAULT NULL,
+  `tipo_reporte` varchar(100) DEFAULT NULL,
+  `descripcion` text,
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  CONSTRAINT `reportes_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reportes`
+--
+
+LOCK TABLES `reportes` WRITE;
+/*!40000 ALTER TABLE `reportes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reportes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `reportes_comentario`
+--
+
+DROP TABLE IF EXISTS `reportes_comentario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `reportes_comentario` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int DEFAULT NULL,
+  `comentario_id` int DEFAULT NULL,
+  `motivo` varchar(255) DEFAULT NULL,
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `comentario_id` (`comentario_id`),
+  CONSTRAINT `reportes_comentario_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `reportes_comentario_ibfk_2` FOREIGN KEY (`comentario_id`) REFERENCES `comentarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reportes_comentario`
+--
+
+LOCK TABLES `reportes_comentario` WRITE;
+/*!40000 ALTER TABLE `reportes_comentario` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reportes_comentario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `respuestas_comentario`
+--
+
+DROP TABLE IF EXISTS `respuestas_comentario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `respuestas_comentario` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int DEFAULT NULL,
+  `comentario_id` int DEFAULT NULL,
+  `respuesta` text,
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `comentario_id` (`comentario_id`),
+  CONSTRAINT `respuestas_comentario_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `respuestas_comentario_ibfk_2` FOREIGN KEY (`comentario_id`) REFERENCES `comentarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `respuestas_comentario`
+--
+
+LOCK TABLES `respuestas_comentario` WRITE;
+/*!40000 ALTER TABLE `respuestas_comentario` DISABLE KEYS */;
+/*!40000 ALTER TABLE `respuestas_comentario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `rol`
+--
+
+DROP TABLE IF EXISTS `rol`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rol` (
+  `rol_id` int NOT NULL AUTO_INCREMENT,
+  `rol_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`rol_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rol`
+--
+
+LOCK TABLES `rol` WRITE;
+/*!40000 ALTER TABLE `rol` DISABLE KEYS */;
+INSERT INTO `rol` VALUES (1,'ADMIN'),(2,'VISITANTE'),(3,'CLIENTE');
+/*!40000 ALTER TABLE `rol` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sesiones`
+--
+
+DROP TABLE IF EXISTS `sesiones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sesiones` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int DEFAULT NULL,
+  `token` varchar(100) DEFAULT NULL,
+  `fecha_expiracion` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  CONSTRAINT `sesiones_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sesiones`
+--
+
+LOCK TABLES `sesiones` WRITE;
+/*!40000 ALTER TABLE `sesiones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sesiones` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `suscripciones`
+--
+
+DROP TABLE IF EXISTS `suscripciones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `suscripciones` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int DEFAULT NULL,
+  `plan` varchar(100) DEFAULT NULL,
+  `fecha_inicio` timestamp NULL DEFAULT NULL,
+  `fecha_fin` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  CONSTRAINT `suscripciones_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `suscripciones`
+--
+
+LOCK TABLES `suscripciones` WRITE;
+/*!40000 ALTER TABLE `suscripciones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `suscripciones` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `traducciones`
+--
+
+DROP TABLE IF EXISTS `traducciones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `traducciones` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `idioma_id` int DEFAULT NULL,
+  `etiqueta` varchar(100) DEFAULT NULL,
+  `traduccion` text,
+  PRIMARY KEY (`id`),
+  KEY `idioma_id` (`idioma_id`),
+  CONSTRAINT `traducciones_ibfk_1` FOREIGN KEY (`idioma_id`) REFERENCES `idiomas` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `traducciones`
+--
+
+LOCK TABLES `traducciones` WRITE;
+/*!40000 ALTER TABLE `traducciones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `traducciones` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `transacciones`
+--
+
+DROP TABLE IF EXISTS `transacciones`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `transacciones` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int DEFAULT NULL,
+  `curso_id` int DEFAULT NULL,
+  `monto` decimal(10,2) DEFAULT NULL,
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `curso_id` (`curso_id`),
+  CONSTRAINT `transacciones_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `transacciones_ibfk_2` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `transacciones`
+--
+
+LOCK TABLES `transacciones` WRITE;
+/*!40000 ALTER TABLE `transacciones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `transacciones` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `usuarios`
+--
+
+DROP TABLE IF EXISTS `usuarios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `usuarios` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `contrasena` varchar(100) DEFAULT NULL,
+  `rol_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  KEY `fk_rol` (`rol_id`),
+  CONSTRAINT `fk_rol` FOREIGN KEY (`rol_id`) REFERENCES `rol` (`rol_id`),
+  CONSTRAINT `fk_rol_id` FOREIGN KEY (`rol_id`) REFERENCES `rol` (`rol_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuarios`
+--
+
+LOCK TABLES `usuarios` WRITE;
+/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
+INSERT INTO `usuarios` VALUES (16,'Admin','admin@admin.com','$2b$10$SXQccqRTq.cQSxH7BrVU..KIWYBmQ5QdQ9hWfO.Ah2/cQbO2Kpsg6',1);
+/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `valoraciones_comentario`
+--
+
+DROP TABLE IF EXISTS `valoraciones_comentario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `valoraciones_comentario` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int DEFAULT NULL,
+  `comentario_id` int DEFAULT NULL,
+  `valoracion` enum('positiva','negativa') DEFAULT NULL,
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `comentario_id` (`comentario_id`),
+  CONSTRAINT `valoraciones_comentario_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `valoraciones_comentario_ibfk_2` FOREIGN KEY (`comentario_id`) REFERENCES `comentarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `valoraciones_comentario`
+--
+
+LOCK TABLES `valoraciones_comentario` WRITE;
+/*!40000 ALTER TABLE `valoraciones_comentario` DISABLE KEYS */;
+/*!40000 ALTER TABLE `valoraciones_comentario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `visualizaciones_curso`
+--
+
+DROP TABLE IF EXISTS `visualizaciones_curso`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `visualizaciones_curso` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int DEFAULT NULL,
+  `curso_id` int DEFAULT NULL,
+  `fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `curso_id` (`curso_id`),
+  CONSTRAINT `visualizaciones_curso_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `visualizaciones_curso_ibfk_2` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `visualizaciones_curso`
+--
+
+LOCK TABLES `visualizaciones_curso` WRITE;
+/*!40000 ALTER TABLE `visualizaciones_curso` DISABLE KEYS */;
+/*!40000 ALTER TABLE `visualizaciones_curso` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping events for database 'leog'
+--
+
+--
+-- Dumping routines for database 'leog'
+--
+/*!50003 DROP PROCEDURE IF EXISTS `agregar_categoria` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `agregar_categoria`(IN p_nombre VARCHAR(255), IN p_descripcion TEXT)
 BEGIN
   INSERT INTO categorias (nombre, descripcion)
   VALUES (p_nombre, p_descripcion);
-END;
-
-create procedure agregar_curso(IN p_nombre varchar(255), IN p_descripcion text, IN p_imagen_url varchar(255),
-                               IN p_video_frame varchar(255), IN p_categoria_id int)
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `agregar_curso` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `agregar_curso`(
+    IN p_nombre VARCHAR(255),
+    IN p_descripcion TEXT,
+    IN p_imagen_url VARCHAR(255),
+    IN p_video_frame VARCHAR(255),
+    IN p_categoria_id INT
+)
 BEGIN
     INSERT INTO cursos (nombre, descripcion, imagen_url, video_iframe, categoria_id)
     VALUES (p_nombre, p_descripcion, p_imagen_url, p_video_frame, p_categoria_id);
-END;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `iniciar_sesion` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `iniciar_sesion`(IN userEmail VARCHAR(100))
+BEGIN
+    SELECT user.*, r.rol_name 
+    FROM usuarios user 
+    LEFT JOIN rol r ON user.rol_id = r.rol_id 
+    WHERE user.email = userEmail;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2024-03-14 22:39:05
