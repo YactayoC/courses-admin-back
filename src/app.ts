@@ -6,15 +6,11 @@ import path from "path";
 import { routerAdmin } from "./routes/admin.route";
 import { verificateConnection } from "./database/connectionDB";
 import { routerAuth } from "./routes/auth.route";
-import {routerComment} from "./routes/comment.route";
-import { verificarRegistro } from "./services/dataDefault.service";
+import { routerComment } from "./routes/comment.route";
 
-verificateConnection();
-verificarRegistro();
+verificateConnection(); //VERIFICA CONEXION A LA BD
 
 const app = express();
-//RUTA PARA EXPONER LA IMAGENES src/uploads
-//dentro del src
 app.use("/uploads", express.static(path.resolve(__dirname, "uploads")));
 
 app.use(express.json());

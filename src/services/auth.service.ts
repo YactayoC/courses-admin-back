@@ -11,18 +11,15 @@ const iniciarSesion = async (req: Request, res: Response) => {
   }
 
   try {
-    const query =
-      "SELECT user.*, r.rol_name FROM usuarios user LEFT JOIN rol r ON user.rol_id = r.rol_id WHERE email = ?";
-
+    const query = "CALL iniciar_sesion(?)";
     const [response] = await pool.query<RowDataPacket[]>(query, [email]);
 
-    if (response.length === 0) {
+    if (response[0].length === 0) {
       return res.status(400).json({ message: "Usuario no encontrado" });
     }
-
     const user = response[0];
 
-    const isPasswordValid = await bcrypt.compare(password, user.contrasena);
+    const isPasswordValid = await bcrypt.compare(password, user[0].contrasena);
 
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Contraseña incorrecta" });
@@ -31,14 +28,15 @@ const iniciarSesion = async (req: Request, res: Response) => {
     return res.json({
       message: "Usuario autenticado correctamente",
       user: {
-        id: user.id,
-        nombre: user.nombre,
-        email: user.email,
-        rol_id: user.rol_id,
-        rol_name: user.rol_name,
+        id: user[0].id,
+        nombre: user[0].nombre,
+        email: user[0].email,
+        rol_id: user[0].rol_id,
+        rol_name: user[0].rol_name,
       },
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
